@@ -1,0 +1,875 @@
+" Vim syntax file
+" Language:	Octopus's main input file
+" Maintainer:	Théo Cavignac <theo.cavignac@gmail.com>
+" Last Change:	2024 Mar 28
+
+if exists("b:current_syntax")
+    finish
+endif
+
+let b:current_syntax = "octopus"
+
+syntax region octoComment start="-" end="$"
+
+" If it is some contiguous non blank thing that does not match other rule, it
+" is trash: misspelled keyword, typo etc...
+syntax match octoTrash  /\w\+/
+highlight link octoTrash Error
+
+" Strings
+syntax region octoString  start=+"+ skip=+\\"+ end=+"+
+highlight link octoString String
+
+" Integers
+syntax match octoNumber  /\<[+-]\?\d\+\>/
+" floating point number
+syntax match octoNumber  /\<\d\+\.\d\+\([deqDEQ][-+]\=\d\+\)\=\>/
+" floating point number, without a decimal point
+syntax match octoNumber  /\<\d\+[deqDEQ][-+]\=\d\+\>/
+" floating point number, starting with a decimal point
+syntax match octoNumber  /\.\d\+\([deqDEQ][-+]\=\d\+\)\=\>/
+" floating point number, no digits after decimal
+syntax match octoNumber  /\<\d\+\.\([deqDEQ][-+]\=\d\+\)\=\>/
+
+highlight link octoNumber Number
+
+highlight link octoKeyword Keyword
+
+syntax region octoVarVal start="=" end=/$/ contains=octoConst,octoUnit,octoOp,octoFuncCall,octoMode,octoOutUnit
+
+highlight link octoConst Constant
+highlight link octoUnit Number
+syntax keyword octoConst contained pi e true false yes no i
+syntax keyword octoUnit contained
+    \ angstrom
+    \ pm picometer
+    \ nm nanometer
+    \ ry rydberg
+    \ eV electronvolt
+    \ invcm
+    \ kelvin
+    \ kjoule_mol
+    \ kcal_mol
+    \ as attosecond
+    \ fs femtosecond
+    \ ps picosecond
+    \ c
+
+syntax keyword octoOp contained
+    \ +
+    \ -
+    \ *
+    \ /
+
+highlight link octoOp Operator
+syntax region octoFuncCall start=/\<\w\+\>(/ end=/)/ contains=octoFunc,octoConst,octoUnit,octoOp,octoFuncCall
+
+highlight link octoBlock Statement
+syntax region octoBlock start="%\<\w\+\>" end="%"
+
+highlight link octoFunc Function
+
+highlight link octoOutUnit Type
+syntax keyword octoOutUnit contained ev_angstrom eV_Anstrom atomic Atomic
+
+highlight link octoMode Type
+syntax keyword octoMode contained
+    \ gs unocc td do
+    \ opt_control em_resp
+    \ casida vdw vib_modes
+    \ one_shot kdotp dummy invert_ks
+    \ test recipe
+
+syntax keyword octoFunc contained
+    \ sqrt exp log ln log10 logb
+    \ arg abs abs2 logabs conjg inv
+    \ sin cos tan cot sec csc
+    \ asin acos atan acot asec acsc
+    \ atan2 sinh cosh tanh coth sech csch
+    \ sinhh coshh tanhh cothh sechh cschh
+    \ asinh acosh atanh acoth asech acsch
+    \ min max step erf realpart imagpart
+    \ floor ceiling
+
+syntax keyword octoKeyword nextgroup=octoVarVal
+    \ ABCapHeight
+    \ ABShape
+    \ ABWidth
+    \ ACBN0IntersiteCutoff
+    \ ACBN0IntersiteInteraction
+    \ ACBN0RotationallyInvariant
+    \ ACBN0Screening
+    \ AOLoewdin
+    \ AONormalize
+    \ AOSubmesh
+    \ AOThreshold
+    \ AOTruncation
+    \ AbsorbingBoundaries
+    \ AccelBenchmark
+    \ AccelDevice
+    \ AccelPlatform
+    \ AdaptivelyCompressedExchange
+    \ AllElectronANCParam
+    \ AllElectronSigma
+    \ AllElectronType
+    \ AllowCPUonly
+    \ AlphaFMM
+    \ AnalyticalExternalSource
+    \ AnimationMultiFiles
+    \ AnimationSampling
+    \ ArnoldiOrthogonalization
+    \ AtomsMagnetDirection
+    \ AxisType
+    \ BandStructureComputeProjections
+    \ BerkeleyGW_CalcDipoleMtxels
+    \ BerkeleyGW_CalcExchange
+    \ BerkeleyGW_NumberBands
+    \ BerkeleyGW_VmtxelNumCondBands
+    \ BerkeleyGW_VmtxelNumValBands
+    \ BerkeleyGW_VmtxelPolarization
+    \ BerkeleyGW_Vxc_diag_nmax
+    \ BerkeleyGW_Vxc_diag_nmin
+    \ BerkeleyGW_Vxc_offdiag_nmax
+    \ BerkeleyGW_Vxc_offdiag_nmin
+    \ BerkeleyGW_WFN_filename
+    \ BesselBeamAxisShift
+    \ BornChargeSumRuleCorrection
+    \ BoxCenter
+    \ BoxCgalFile
+    \ BoxShape
+    \ BoxShapeImage
+    \ BoxShapeUsDef
+    \ CGAdditionalTerms
+    \ CGDirection
+    \ CGEnergyChangeThreshold
+    \ CGOrthogonalizeAll
+    \ CalcInfrared
+    \ CalcNormalModeWfs
+    \ CalculateDiamagneticCurrent
+    \ CalculateSelfInducedMagneticField
+    \ CalculationMode
+    \ CasidaCalcForces
+    \ CasidaCalcForcesKernel
+    \ CasidaCalcForcesSCF
+    \ CasidaCalcTriplet
+    \ CasidaDistributedMatrix
+    \ CasidaHermitianConjugate
+    \ CasidaKSEnergyWindow
+    \ CasidaKohnShamStates
+    \ CasidaMomentumTransfer
+    \ CasidaParallelEigensolver
+    \ CasidaPrintExcitations
+    \ CasidaQuadratureOrder
+    \ CasidaSpectrumBroadening
+    \ CasidaSpectrumEnergyStep
+    \ CasidaSpectrumMaxEnergy
+    \ CasidaSpectrumMinEnergy
+    \ CasidaSpectrumRotationMatrix
+    \ CasidaTheoryLevel
+    \ CasidaTransitionDensities
+    \ CasidaWeightThreshold
+    \ CasidaWriteDistributedMatrix
+    \ ChebyshevFilterBoundMixing
+    \ ChebyshevFilterDegree
+    \ ChebyshevFilterLanczosOrder
+    \ ChebyshevFilterNIter
+    \ CheckPointsMediumFromFile
+    \ ConductivityFromForces
+    \ ConductivitySpectrumTimeStepFactor
+    \ ConvAbsDens
+    \ ConvAbsEv
+    \ ConvEigenError
+    \ ConvEnergy
+    \ ConvRelDens
+    \ ConvRelEv
+    \ ConvertEnd
+    \ ConvertEnergyMax
+    \ ConvertEnergyMin
+    \ ConvertEnergyStep
+    \ ConvertFTMethod
+    \ ConvertFilename
+    \ ConvertFolder
+    \ ConvertHow
+    \ ConvertIterateFolder
+    \ ConvertOutputFilename
+    \ ConvertOutputFolder
+    \ ConvertReadSize
+    \ ConvertScalarOperation
+    \ ConvertStart
+    \ ConvertStep
+    \ ConvertSubtract
+    \ ConvertSubtractFilename
+    \ ConvertSubtractFolder
+    \ Coordinates
+    \ CudaAwareMPI
+    \ CurrentDensity
+    \ CurrentDensityFactor
+    \ CurrentThroughPlane
+    \ CurvGygiA
+    \ CurvGygiAlpha
+    \ CurvGygiBeta
+    \ CurvMethod
+    \ CurvModineJBar
+    \ CurvModineJlocal
+    \ CurvModineJrange
+    \ CurvModineXBar
+    \ DFTUBasisFromStates
+    \ DFTUBasisStates
+    \ DFTUDoubleCounting
+    \ DFTULevel
+    \ DFTUPoissonSolver
+    \ DOSComputePDOS
+    \ DOSEnergyMax
+    \ DOSEnergyMin
+    \ DOSEnergyPoints
+    \ DOSGamma
+    \ Debug
+    \ DebugTrapSignals
+    \ DegeneracyThreshold
+    \ DeltaEFMM
+    \ DensitytoCalc
+    \ DerivativesOrder
+    \ DerivativesStencil
+    \ DescribeParticlesModelmb
+    \ Dimensions
+    \ DisableAccel
+    \ Displacement
+    \ DoubleFFTParameter
+    \ DressedOrbitals
+    \ ELFWithCurrentTerm
+    \ EMCalcBornCharges
+    \ EMCalcDiagonalField
+    \ EMCalcMagnetooptics
+    \ EMCalcRotatoryResponse
+    \ EMEta
+    \ EMForceNoKdotP
+    \ EMFreqs
+    \ EMFreqsSort
+    \ EMHyperpol
+    \ EMKPointOutput
+    \ EMMagnetoopticsNoHVar
+    \ EMOccupiedResponse
+    \ EMPerturbationType
+    \ EMStartDensGityIsZeroField
+    \ EMStaticElectricField
+    \ EMVerbose
+    \ EMWavefunctionsFromScratch
+    \ EMWriteRestartDensities
+    \ Eigensolver
+    \ EigensolverImaginaryTime
+    \ EigensolverMaxIter
+    \ EigensolverMinimizationIter
+    \ EigensolverTolerance
+    \ EnablePhotons
+    \ EwaldAlpha
+    \ ExcessCharge
+    \ ExperimentalFeatures
+    \ ExternalCurrent
+    \ ExternalSourceBesselOutput
+    \ ExtraStates
+    \ ExtraStatesInPercent
+    \ ExtraStatesToConverge
+    \ FFTLibrary
+    \ FFTOptimize
+    \ FFTPreparePlan
+    \ FilterPotentials
+    \ ForceComplex
+    \ ForceTotalEnforce
+    \ FromScratch
+    \ GOCenter
+    \ GOConstrains
+    \ GOFireIntegrator
+    \ GOFireMass
+    \ GOLineTol
+    \ GOMaxIter
+    \ GOMethod
+    \ GOMinimumMove
+    \ GOObjective
+    \ GOStep
+    \ GOTolerance
+    \ GOType
+    \ GaugeFieldDelay
+    \ GaugeFieldDynamics
+    \ GaugeFieldPropagate
+    \ GaugeVectorField
+    \ GuessMagnetDensity
+    \ GyromagneticRatio
+    \ HFSingularity
+    \ HFSingularityNk
+    \ HFSingularityNsteps
+    \ HamiltonianApplyPacked
+    \ HamiltonianVariation
+    \ HelmholtzCoulombGaugeTolerance
+    \ HelmholtzEnforceCoulombGauge
+    \ HelmholtzVisualizeBoxes
+    \ InitialIonicTemperature
+    \ InitialSpins
+    \ InitializeGPUBuffers
+    \ Interaction1D
+    \ Interaction1DScreening
+    \ InteractionTiming
+    \ Interactions
+    \ InterpolationTestOrder
+    \ InvertKSConvAbsDens
+    \ InvertKSGodbyMu
+    \ InvertKSGodbyPower
+    \ InvertKSMaxIter
+    \ InvertKSStellaAlpha
+    \ InvertKSStellaBeta
+    \ InvertKSTargetDensity
+    \ InvertKSVerbosity
+    \ InvertKSmethod
+    \ IonsConstantVelocity
+    \ IonsTimeDependentDisplacements
+    \ KLIPhotonCOC
+    \ KPoints
+    \ KPointsGrid
+    \ KPointsPath
+    \ KPointsReduced
+    \ KPointsUseSymmetries
+    \ KPointsUseTimeReversal
+    \ KSInversionAsymptotics
+    \ KSInversionLevel
+    \ KdotPCalcSecondOrder
+    \ KdotPCalculateEffectiveMasses
+    \ KdotPEta
+    \ KdotPOccupiedSolutionMethod
+    \ KdotPUseNonLocalPseudopotential
+    \ KdotPVelMethod
+    \ LCAOAlternative
+    \ LCAOComplexYlms
+    \ LCAODiagTol
+    \ LCAODimension
+    \ LCAOExtraOrbitals
+    \ LCAOKeepOrbitals
+    \ LCAOMaximumOrbitalRadius
+    \ LCAOSaveMemory
+    \ LCAOScaleFactor
+    \ LCAOStart
+    \ LDBaderThreshold
+    \ LDEnd
+    \ LDFilename
+    \ LDFolder
+    \ LDIonicDipole
+    \ LDIterateFolder
+    \ LDMultipoleLmax
+    \ LDOutput
+    \ LDOutputFormat
+    \ LDOverWrite
+    \ LDRadiiFile
+    \ LDRestart
+    \ LDRestartFolder
+    \ LDStart
+    \ LDStep
+    \ LDUpdate
+    \ LDUseAtomicRadii
+    \ LRConvAbsDens
+    \ LRConvRelDens
+    \ LRMaximumIter
+    \ LRTolAdaptiveFactor
+    \ LRTolFinalTol
+    \ LRTolInitTol
+    \ LRTolIterWindow
+    \ LRTolScheme
+    \ LatticeParameters
+    \ LatticeVectors
+    \ LennardJonesEpsilon
+    \ LennardJonesSigma
+    \ LinearMediumBoxFile
+    \ LinearMediumBoxShape
+    \ LinearMediumBoxSize
+    \ LinearMediumEdgeProfile
+    \ LinearMediumOutput
+    \ LinearMediumOutputDir
+    \ LinearMediumProperties
+    \ LinearSolver
+    \ LinearSolverMaxIter
+    \ LocalDomains
+    \ LocalMagneticMomentsSphereRadius
+    \ Lsize
+    \ MPIDebugHook
+    \ MagneticConstrain
+    \ MagneticConstrainStrength
+    \ MagneticGaugeCorrection
+    \ MainAxis
+    \ MaxAngularMomentum
+    \ MaximumIter
+    \ MaximumIterBerry
+    \ MaxwellABPMLPower
+    \ MaxwellABPMLReflectionError
+    \ MaxwellABWidth
+    \ MaxwellAbsorbingBoundaries
+    \ MaxwellBoundaryConditions
+    \ MaxwellCouplingMode
+    \ MaxwellDipoleField
+    \ MaxwellFieldsCoordinate
+    \ MaxwellFunctions
+    \ MaxwellHamiltonianOperator
+    \ MaxwellIncidentWaves
+    \ MaxwellOutput
+    \ MaxwellOutputInterval
+    \ MaxwellOutputIterDir
+    \ MaxwellPlaneWavesInBox
+    \ MaxwellRestartWriteInterval
+    \ MaxwellTDETRSApprox
+    \ MaxwellTDOutput
+    \ MaxwellTestQuadrupole
+    \ MediumCurrentCoordinates
+    \ MediumDispersionType
+    \ MediumElectricSigma
+    \ MediumEpsilonFactor
+    \ MediumMagneticSigma
+    \ MediumMuFactor
+    \ MediumPoleDamping
+    \ MediumPoleEnergy
+    \ MediumPoleStrength
+    \ MediumWidth
+    \ MemoryLimit
+    \ MeshBlockDirection
+    \ MeshBlockSize
+    \ MeshIndexType
+    \ MeshLocalBlockDirection
+    \ MeshLocalBlockSize
+    \ MeshLocalOrder
+    \ MeshOrder
+    \ MeshPartition
+    \ MeshPartitionPackage
+    \ MeshPartitionStencil
+    \ MeshPartitionVirtualSize
+    \ MeshUseTopology
+    \ MillerIndicesBasis
+    \ MixField
+    \ MixInterval
+    \ MixNumberSteps
+    \ Mixing
+    \ MixingPreconditioner
+    \ MixingResidual
+    \ MixingRestart
+    \ MixingScheme
+    \ MomentumTransfer
+    \ MoveIons
+    \ MultigridDerivativesOrder
+    \ MultigridLevels
+    \ MultipolarExpansionTerms
+    \ NDimModelmb
+    \ NFFTCutoff
+    \ NFFTGuruInterface
+    \ NFFTOversampling
+    \ NFFTPrecompute
+    \ NLOperatorCompactBoundaries
+    \ NParticleModelmb
+    \ NTypeParticleModelmb
+    \ OCTCheckGradient
+    \ OCTClassicalTarget
+    \ OCTControlFunctionOmegaMax
+    \ OCTControlFunctionRepresentation
+    \ OCTControlFunctionType
+    \ OCTCurrentFunctional
+    \ OCTCurrentWeight
+    \ OCTDelta
+    \ OCTDirectStep
+    \ OCTDoubleCheck
+    \ OCTDumpIntermediate
+    \ OCTEps
+    \ OCTEta
+    \ OCTExcludedStates
+    \ OCTFilter
+    \ OCTFixFluenceTo
+    \ OCTFixInitialFluence
+    \ OCTHarmonicWeight
+    \ OCTInitialState
+    \ OCTInitialTransformStates
+    \ OCTInitialUserdefined
+    \ OCTLaserEnvelope
+    \ OCTLocalTarget
+    \ OCTMaxIter
+    \ OCTMomentumDerivatives
+    \ OCTNumberCheckPoints
+    \ OCTOptimizeHarmonicSpectrum
+    \ OCTPenalty
+    \ OCTPositionDerivatives
+    \ OCTRandomInitialGuess
+    \ OCTScheme
+    \ OCTSpatialCurrWeight
+    \ OCTStartIterCurrTg
+    \ OCTTargetDensity
+    \ OCTTargetDensityFromState
+    \ OCTTargetOperator
+    \ OCTTargetSpin
+    \ OCTTargetTransformStates
+    \ OCTTargetUserdefined
+    \ OCTTdTarget
+    \ OCTVelocityDerivatives
+    \ OCTVelocityTarget
+    \ OEPLevel
+    \ OEPMixing
+    \ OEPMixingScheme
+    \ OEPRemoveElectron
+    \ Occupations
+    \ OnlyUserDefinedInitialStates
+    \ OperateAccel
+    \ OperateComplex
+    \ OperateDouble
+    \ OptimizeChebyshevFilterDegree
+    \ Output
+    \ OutputDuringSCF
+    \ OutputFormat
+    \ OutputInterval
+    \ OutputIterDir
+    \ OutputMEEnd
+    \ OutputMEMultipoles
+    \ OutputMEStart
+    \ OutputMatrixElements
+    \ OutputWfsNumber
+    \ PCMCalcMethod
+    \ PCMCalculation
+    \ PCMCavity
+    \ PCMChargeSmearNN
+    \ PCMDebyeRelaxTime
+    \ PCMDrudeLDamping
+    \ PCMDrudeLOmega
+    \ PCMDynamicEpsilon
+    \ PCMEoMInitialCharges
+    \ PCMEpsilonModel
+    \ PCMGamessBenchmark
+    \ PCMKick
+    \ PCMLocalField
+    \ PCMQtotTol
+    \ PCMRadiusScaling
+    \ PCMRenormCharges
+    \ PCMSmearingFactor
+    \ PCMSolute
+    \ PCMSpheresOnH
+    \ PCMStaticEpsilon
+    \ PCMTDLevel
+    \ PCMTessMinDistance
+    \ PCMTessSubdivider
+    \ PCMUpdateIter
+    \ PCMVdWRadii
+    \ PDBCoordinates
+    \ PDBGOConstrains
+    \ PDBVelocities
+    \ PESMask2PEnlargeFactor
+    \ PESMaskEnlargeFactor
+    \ PESMaskFilterCutOff
+    \ PESMaskIncludePsiA
+    \ PESMaskMode
+    \ PESMaskPlaneWaveProjection
+    \ PESMaskShape
+    \ PESMaskSize
+    \ PESMaskSpectEnergyMax
+    \ PESMaskSpectEnergyStep
+    \ PESMaskStartTime
+    \ PES_Flux_ARPES_grid
+    \ PES_Flux_AnisotropyCorrection
+    \ PES_Flux_DeltaK
+    \ PES_Flux_EnergyGrid
+    \ PES_Flux_Face_Dens
+    \ PES_Flux_GridTransformMatrix
+    \ PES_Flux_Kmax
+    \ PES_Flux_Kmin
+    \ PES_Flux_Lmax
+    \ PES_Flux_Lsize
+    \ PES_Flux_Momenutum_Grid
+    \ PES_Flux_Offset
+    \ PES_Flux_Parallelization
+    \ PES_Flux_PhiK
+    \ PES_Flux_Radius
+    \ PES_Flux_RuntimeOutput
+    \ PES_Flux_Shape
+    \ PES_Flux_StepsPhiK
+    \ PES_Flux_StepsPhiR
+    \ PES_Flux_StepsThetaK
+    \ PES_Flux_StepsThetaR
+    \ PES_Flux_ThetaK
+    \ PES_Flux_UseSymmetries
+    \ PES_spm_DeltaOmega
+    \ PES_spm_OmegaMax
+    \ PES_spm_Radius
+    \ PES_spm_StepsPhiR
+    \ PES_spm_StepsThetaR
+    \ PES_spm_points
+    \ PES_spm_recipe
+    \ PNFFTCutoff
+    \ PNFFTOversampling
+    \ ParDomains
+    \ ParKPoints
+    \ ParOther
+    \ ParStates
+    \ ParallelXC
+    \ ParallelizationNumberSlaves
+    \ ParallelizationOfDerivatives
+    \ ParallelizationPoissonAllNodes
+    \ ParticleCharge
+    \ ParticleInitialPosition
+    \ ParticleInitialVelocity
+    \ ParticleMass
+    \ PartitionPrint
+    \ PauliHamiltonianTerms
+    \ PeriodicBoundaryMask
+    \ PeriodicDimensions
+    \ PhotoDopingBand
+    \ PhotoDopingNumElectrons
+    \ PhotoDopingSmearing
+    \ PhotoElectronSpectrum
+    \ PhotoelectronSpectrumOutput
+    \ PhotoelectronSpectrumResolveStates
+    \ PhotonEta
+    \ PhotonModes
+    \ PhotonXCEnergyMethod
+    \ PhotonXCEtaC
+    \ PhotonXCLDAKappa
+    \ PhotonXCLambShift
+    \ PhotonXCLambShiftOmegaCutoff
+    \ PhotonXCLambShiftRenormalizeMass
+    \ PhotonmodesFilename
+    \ Poisson1DSoftCoulombParam
+    \ PoissonCutoffRadius
+    \ PoissonFFTKernel
+    \ PoissonSolver
+    \ PoissonSolverBoundaries
+    \ PoissonSolverMGMaxCycles
+    \ PoissonSolverMGPostsmoothingSteps
+    \ PoissonSolverMGPresmoothingSteps
+    \ PoissonSolverMGRelaxationFactor
+    \ PoissonSolverMGRelaxationMethod
+    \ PoissonSolverMGRestrictionMethod
+    \ PoissonSolverMaxIter
+    \ PoissonSolverMaxMultipole
+    \ PoissonSolverNodes
+    \ PoissonSolverPSolverParallelData
+    \ PoissonSolverThreshold
+    \ PoissonTestPeriodicThreshold
+    \ Preconditioner
+    \ PreconditionerFilterFactor
+    \ PreconditionerIterationsMiddle
+    \ PreconditionerIterationsPost
+    \ PreconditionerIterationsPre
+    \ Preorthogonalization
+    \ ProfilingAllNodes
+    \ ProfilingMode
+    \ ProfilingOutputTree
+    \ ProfilingOutputYAML
+    \ PropagateSpatialMaxwellField
+    \ PropagationSpectrumDampFactor
+    \ PropagationSpectrumDampMode
+    \ PropagationSpectrumEndTime
+    \ PropagationSpectrumEnergyStep
+    \ PropagationSpectrumMaxEnergy
+    \ PropagationSpectrumMinEnergy
+    \ PropagationSpectrumSigmaDiagonalization
+    \ PropagationSpectrumStartTime
+    \ PropagationSpectrumSymmetrizeSigma
+    \ PropagationSpectrumTransform
+    \ PropagationSpectrumType
+    \ PseudopotentialSet
+    \ QPointsGrid
+    \ RDMBasis
+    \ RDMConvEner
+    \ RDMHartreeFock
+    \ RDMTolerance
+    \ RDMToleranceFO
+    \ Radius
+    \ RandomVelocityTemp
+    \ RashbaSpinOrbitCoupling
+    \ RecalculateGSDuringEvolution
+    \ ReducedCoordinates
+    \ RegriddingInterpolationLevel
+    \ RegriddingRescale
+    \ RegularizationFunction
+    \ RegularizationFunctionWidth
+    \ RelativisticCorrection
+    \ ReorderRanks
+    \ ReportMemory
+    \ ResponseMethod
+    \ RestartFixedOccupations
+    \ RestartOptions
+    \ RestartReorderOccs
+    \ RestartWallTimePeriod
+    \ RestartWrite
+    \ RestartWriteInterval
+    \ RestartWriteTime
+    \ RootSolver
+    \ RootSolverAbsTolerance
+    \ RootSolverMaxIter
+    \ RootSolverRelTolerance
+    \ SCDMforPZSIC
+    \ SCDMmu
+    \ SCDMsigma
+    \ SCFCalculateDipole
+    \ SCFCalculateForces
+    \ SCFCalculatePartialCharges
+    \ SCFCalculateStress
+    \ SCFinLCAO
+    \ SICCorrection
+    \ SOStrength
+    \ SPARSKITAbsTolerance
+    \ SPARSKITIterOut
+    \ SPARSKITKrylovSubspaceSize
+    \ SPARSKITMaxIter
+    \ SPARSKITRelTolerance
+    \ SPARSKITSolver
+    \ SPARSKITVerboseSolver
+    \ ScaLAPACKCompatible
+    \ SccTolerance
+    \ SkipSOrbitals
+    \ SlakoDir
+    \ Smearing
+    \ SmearingFunction
+    \ SmearingMPOrder
+    \ Spacing
+    \ Species
+    \ SpeciesProjectorSphereThreshold
+    \ SpeciesTimeDependent
+    \ SpectrumMethod
+    \ SpectrumSignalNoise
+    \ SpeedOfLightFactor
+    \ SpinComponents
+    \ SpiralBoundaryCondition
+    \ StatesBlockSize
+    \ StatesCLDeviceMemory
+    \ StatesOrthogonalization
+    \ StatesPack
+    \ StatesRandomization
+    \ StaticElectricField
+    \ StaticExternalPotentials
+    \ StaticMagneticField
+    \ StaticMagneticField2DGauge
+    \ SubspaceDiagonalization
+    \ SupercellDimensions
+    \ SurfaceCorrection
+    \ SymmetriesCompute
+    \ SymmetriesTolerance
+    \ SymmetrizeDensity
+    \ SymmetrizeDynamicalMatrix
+    \ SymmetryBreakDir
+    \ Systems
+    \ TDDeltaKickTime
+    \ TDDeltaStrength
+    \ TDDeltaStrengthMode
+    \ TDDeltaUserDefined
+    \ TDDynamics
+    \ TDEasyAxis
+    \ TDEnergyUpdateIter
+    \ TDExcitedStatesToProject
+    \ TDExpOrder
+    \ TDExponentialMethod
+    \ TDExternalFields
+    \ TDFloquetDimension
+    \ TDFloquetFrequency
+    \ TDFloquetSample
+    \ TDFreezeDFTUOccupations
+    \ TDFreezeHXC
+    \ TDFreezeOrbitals
+    \ TDFreezeU
+    \ TDFunctions
+    \ TDGlobalForce
+    \ TDIonicTimeScale
+    \ TDKickFunction
+    \ TDLanczosTol
+    \ TDMaxSteps
+    \ TDMomentumTransfer
+    \ TDMultipleMomentumTransfer
+    \ TDMultipoleLmax
+    \ TDOutput
+    \ TDOutputComputeInterval
+    \ TDOutputDFTU
+    \ TDOutputResolveStates
+    \ TDPhotonicTimeScale
+    \ TDPolarization
+    \ TDPolarizationDirection
+    \ TDPolarizationEquivAxes
+    \ TDPolarizationWprime
+    \ TDProjStateStart
+    \ TDPropagationTime
+    \ TDPropagator
+    \ TDReducedMomentumTransfer
+    \ TDSCFThreshold
+    \ TDScissor
+    \ TDStepsWithSelfConsistency
+    \ TDSystemPropagator
+    \ TDTDMFrequencies
+    \ TDTDMHoleCoordinates
+    \ TDTDMHoleReducedCoordinates
+    \ TDTimeStep
+    \ TemperatureFunction
+    \ TestBatchOps
+    \ TestHamiltonianApply
+    \ TestMaxBlockSize
+    \ TestMinBlockSize
+    \ TestMode
+    \ TestRepetitions
+    \ TestType
+    \ TestVectorPotentialType
+    \ TheoryLevel
+    \ Thermostat
+    \ ThermostatMass
+    \ TimeZero
+    \ TotalStates
+    \ TransformStates
+    \ TransientAbsorptionReference
+    \ TransientMagnetizationReference
+    \ TransverseFieldCalculation
+    \ UnfoldEnergyStep
+    \ UnfoldKPointsPath
+    \ UnfoldLatticeParameters
+    \ UnfoldLatticeVectors
+    \ UnfoldMaxEnergy
+    \ UnfoldMinEnergy
+    \ UnfoldMode
+    \ Units
+    \ UnitsOutput
+    \ UnitsXYZFiles
+    \ UnoccShowOccStates
+    \ UnoccUseTD
+    \ UseAllAtomicOrbitals
+    \ UserDefinedConstantSpatialMaxwellField
+    \ UserDefinedInitialMaxwellStates
+    \ UserDefinedMaxwellExternalCurrent
+    \ UserDefinedStates
+    \ VDWCorrection
+    \ VDWD3Functional
+    \ VDWSelfConsistent
+    \ VDW_TS_cutoff
+    \ VDW_TS_damping
+    \ VDW_TS_sr
+    \ Velocities
+    \ VibrationalSpectrumTime
+    \ VibrationalSpectrumTimeStepFactor
+    \ Volume
+    \ Walltime
+    \ Wannier90Files
+    \ Wannier90Mode
+    \ Wannier90Prefix
+    \ Wannier90UseSCDM
+    \ Wannier90UseTD
+    \ WorkDir
+    \ XCDensityCorrection
+    \ XCDensityCorrectionCutoff
+    \ XCDensityCorrectionMinimum
+    \ XCDensityCorrectionNormalize
+    \ XCDensityCorrectionOptimize
+    \ XCFunctional
+    \ XCKernel
+    \ XCKernelLRCAlpha
+    \ XCPhotonFunctional
+    \ XCPhotonIncludeHartree
+    \ XCUseGaugeIndependentKED
+    \ XSFCoordinates
+    \ XSFCoordinatesAnimStep
+    \ XSFGOConstrains
+    \ XSFVelocities
+    \ XYZCoordinates
+    \ XYZGOConstrains
+    \ XYZVelocities
+    \ Xalpha
+    \ Xlength
+    \ libvdwxcDebug
+    \ libvdwxcMode
+    \ libvdwxcVDWFactor
+    \ stderr
+    \ stdout
+    \ vdWNPoints
+
+highlight link octoDecl Define
+syntax match octoDecl /\<\w\+\>/ nextgroup=octoVarVal
